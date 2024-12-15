@@ -1,39 +1,37 @@
 <?php
+require_once '../config/database.php';
+require_once '../config/session_config.php';
 session_start();
-require_once 'conex.php'; // Cambié el nombre del archivo de conexion.php a conex.php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $db = new Database();
+    $mysqli = $db->getConnection();
+
     $usuario = $_POST['usuario'];
     $password = $_POST['password'];
 
-    // Usando la conexión mysqli
-    // $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Verificar la conexión
-    if ($mysqli->connect_error) {
-        die("Conexión fallida: " . $mysqli->connect_error);
-    }
-
-    // Preparar la consulta
     $stmt = $mysqli->prepare("SELECT * FROM usuarios WHERE usuario = ? AND password = ?");
-    $stmt->bind_param("ss", $usuario, $password); // 'ss' significa que ambos parámetros son cadenas
+    $stmt->bind_param("ss", $usuario, $password);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+   
     if ($result->num_rows > 0) {
-        // Usuario encontrado, iniciamos la sesión
+        // Limpiar sesión anterior
+        session_regenerate_id(true);
+        
         $user = $result->fetch_assoc();
         $_SESSION['usuario'] = $user['usuario'];
+        $_SESSION['LAST_ACTIVITY'] = time(); // Establecer tiempo de actividad inicial
+        
         header('Location: index.php');
         exit();
     } else {
-        echo 'Usuario o contraseña incorrectos.';
+        $error = 'Usuario o contraseña incorrectos.';
     }
-
     $stmt->close();
-    // $conn->close();
 }
 ?>
+<!-- Resto del HTML de login igual que antes -->
 
 <!DOCTYPE html>
 <html lang="es">
@@ -41,8 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
-    <!-- Enlace a Bootstrap -->
+    <title>MicroSistema ISF - Matricula</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -92,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
-    <!-- Enlace a los scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

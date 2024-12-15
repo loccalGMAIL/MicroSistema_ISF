@@ -1,5 +1,5 @@
 <?php 
-require 'header.php';
+require_once '../includes/header.php';
 ?>
 
     <!-- Contenido Principal -->

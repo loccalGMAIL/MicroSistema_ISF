@@ -1,5 +1,5 @@
 <?php 
-require 'header.php';
+require_once '../includes/header.php';
 ?>
 
 
@@ -32,10 +32,6 @@ require 'header.php';
         "ajax": {
             "url": "reporte_deuda_data.php",
             "type": "POST",
-            // "data": function(d) {
-            //     // Agregar los parámetros de búsqueda al objeto de datos
-            //     d.search = $('input[type="search"]').val();
-            // }
         },
         "columns": [
             { "data": "nombreAlumno", "orderable": true  },

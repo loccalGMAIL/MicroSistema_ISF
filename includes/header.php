@@ -1,11 +1,15 @@
 <?php
-require_once 'conexion.php';
-
+require_once '../config/session_config.php';
 session_start();
+
+// Verificar si el usuario no está autenticado
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
     exit();
 }
+
+// Verificar expiración de sesión
+checkSessionExpiration();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -16,7 +20,7 @@ if (!isset($_SESSION['usuario'])) {
     <title>Microsistema Escolar - Matricula 2024</title>
     <!-- Enlace a la versión más reciente de Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
     <!-- Enlace a la librería de ExcelJS para cargar archivos XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.2.1/exceljs.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

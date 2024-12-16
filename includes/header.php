@@ -1,5 +1,6 @@
 <?php
 require_once '../config/session_config.php';
+require_once 'access_control.php';
 session_start();
 
 // Verificar si el usuario no está autenticado
@@ -38,50 +39,6 @@ checkSessionExpiration();
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php">Inicio</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Cargar
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                        <li class="nav-item">
-                            <a class="nav-link" href="deuda.php">Deuda</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="calificaciones.php">Calificaciones</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Reportes
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                        <li class="nav-item">
-                            <a class="nav-link" href="reporte_deuda.php">Reporte Deuda</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="reporte_calificaciones.php">Reporte Calificaciones</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="reporte_mixto.php">Reporte Matrícula</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="reporte_alumnosPadres.php">Lista Alumnos/Padres</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="configuracion.php">Configuración</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="logout.php">Cerrar sesión ______</a> <!-- Enlace para cerrar sesión -->
-                </li>
-            </ul>
+            <?php renderMenuPorRol(); ?>
         </div>
     </nav>

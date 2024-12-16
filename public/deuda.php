@@ -1,5 +1,6 @@
 <?php 
 require_once '../includes/header.php';
+tieneAcceso(['administrador', 'cuotas']);
 ?>
 
     <!-- Contenido Principal -->

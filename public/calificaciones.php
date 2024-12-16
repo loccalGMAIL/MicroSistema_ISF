@@ -35,7 +35,7 @@ require_once '../includes/header.php';
                     <th style="width: 40%;">Alumno</th>
                     <th style="width: 10%;">Curso</th>
                     <th style="width: 10%;">Previas</th>
-                    <th style="width: 10%;">Recuperatorio</th>
+                    <th style="width: 10%;">Rendir</th>
                 </tr>
             </thead>
             <tbody></tbody>

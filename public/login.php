@@ -9,33 +9,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $usuario = $_POST['usuario'];
     $password = $_POST['password'];
+//-----
+$stmt = $mysqli->prepare("SELECT * FROM usuarios WHERE usuario = ?");
+$stmt->bind_param("s", $usuario);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    $stmt = $mysqli->prepare("SELECT * FROM usuarios WHERE usuario = ? AND password = ?");
-    $stmt->bind_param("ss", $usuario, $password);
-    $stmt->execute();
-    $result = $stmt->get_result();
-   
-    if ($result->num_rows > 0) {
-        // Limpiar sesión anterior
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+    
+    // Verificar contraseña con password_verify
+    if (password_verify($password, $user['password'])) {
         session_regenerate_id(true);
         
-        $user = $result->fetch_assoc();
         $_SESSION['usuario'] = $user['usuario'];
-        $_SESSION['LAST_ACTIVITY'] = time(); // Establecer tiempo de actividad inicial
+        $_SESSION['rol'] = $user['rol'];
+        $_SESSION['LAST_ACTIVITY'] = time();
         
         header('Location: index.php');
         exit();
     } else {
         $error = 'Usuario o contraseña incorrectos.';
     }
+} else {
+    $error = 'Usuario o contraseña incorrectos.';
+}
+
+    //-------
     $stmt->close();
 }
 ?>
-<!-- Resto del HTML de login igual que antes -->
 
 <!DOCTYPE html>
 <html lang="es">
 
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,15 +56,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #f8f9fa;
             margin: 0;
+            background: linear-gradient(to bottom, #1e90ff, #f8f9fa);
         }
         .login-container {
             max-width: 400px;
             background: #fff;
             padding: 20px;
             border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .school-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: -60px auto 10px auto;
+            background: #fff;
         }
         .error-message {
             color: red;
@@ -64,13 +85,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
-
 <body>
     <div class="login-container">
-        <h2 class="text-center">Iniciar sesión</h2>
+        <!-- Escudo del colegio -->
+        <img src="https://isf.edu.py/wp-content/uploads/2020/08/ESCUDO-SIN-FONDO-removebg-preview-218x300.png" 
+             alt="Escudo Colegio Sagrada Familia" class="school-logo">
+        <h2>Iniciar sesión</h2>
         <!-- Mensaje de error -->
         <?php if (!empty($error)) : ?>
-            <p class="error-message text-center"><?= htmlspecialchars($error) ?></p>
+            <p class="error-message"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
         <!-- Formulario -->
@@ -91,6 +114,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
-
